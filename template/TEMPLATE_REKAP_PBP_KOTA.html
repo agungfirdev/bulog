@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SPM_SPM20250733.27.11261525743955</title>
+    <!-- Use filename as title -->
+    <style type="text/css">
+      /* perbesar ukuran font untuk screenshot di puppeteer */
+
+      @page {
+        /* size: A4 portrait; */
+        margin: 0.3in 0.5in; /* Reduced margins */
+      }
+      @media print {
+        body {
+          print-color-adjust: exact;
+          -webkit-print-color-adjust: exact;
+          font-family: Arial, sans-serif;
+          line-height: 1.3;
+        }
+      }
+
+      /* Document Styles */
+      .document {
+        max-width: 21cm;
+        padding: 16px;
+        margin: 0 auto;
+      }
+
+      /* Typography */
+      p {
+        margin: 3px 2px; /* Reduced margins */
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+      p.heading {
+        font-size: 14pt; /* Reduced from 14pt */
+        text-align: center;
+        margin-bottom: 6px; /* Reduced from 8px */
+      }
+      p.normal {
+        font-size: 14pt; /* Reduced from 11pt */
+        /* text-align: justify; */
+      }
+      p.centered {
+        text-align: center;
+      }
+      p.right {
+        text-align: right;
+      }
+      p.no_margin {
+        margin: 0px 4px;
+      }
+      p.table_heading {
+        font-size: 9pt; /* Reduced from 11pt */
+        text-align: center;
+        font-weight: bold;
+        padding: 3px; /* Reduced from 4px */
+      }
+
+      /* Tables */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 8px 0; /* Reduced from 12px */
+      }
+
+      table .visible_border {
+        border: 1px solid #000; /* Reduced from 1.5px */
+        padding: 4px 6px; /* Reduced from 6px 8px */
+      }
+      table .no_border {
+        border: none;
+      }
+      td {
+        vertical-align: middle;
+        line-height: 1.2; /* Reduced from 1.4 */
+      }
+
+      /* Table Tr Background Color */
+      tr.success {
+        background-color: #d4edda;
+      }
+
+      /* Signature Section */
+      .signature-section {
+        margin-top: 20px; /* Reduced from 30px */
+      }
+      .signature-space {
+        height: 60px; /* Reduced from 80px */
+      }
+
+      /* Specific Table Cells */
+      .header-cell {
+        background-color: #f5f5f5;
+        font-weight: bold;
+      }
+
+      /* Utilities */
+      .text-bold {
+        font-weight: bold;
+      }
+      .text-center {
+        text-align: center;
+      }
+
+      .text-center > p {
+        text-align: center;
+      }
+      .text-right {
+        text-align: right;
+      }
+      .mt-4 {
+        margin-top: 12px;
+      }
+      .mb-4 {
+        margin-bottom: 12px;
+      }
+
+      /* Add these styles for images */
+      .logo-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="document">
+      <table width="100%" class="mb-4">
+        <tbody>
+          <tr valign="top">
+            <td style="padding: 6px 0px">
+              <p class="centered heading">
+                <b>LAPORAN PENYERAHAN PBP</b>
+                <br />
+                <b>
+                  <span id="nama_wilayah"></span>
+                </b>
+                <br />
+                <span id="tanggal_laporan"></span>
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table width="100%" class="no_border mt-4">
+        <thead>
+          <tr class="header-cell">
+            <td class="visible_border" width="4%">
+              <p class="table_heading"><b>NO</b></p>
+            </td>
+            <td class="visible_border">
+              <p class="table_heading"><b>KECAMATAN</b></p>
+            </td>
+            <td class="visible_border">
+              <p class="table_heading"><b>JUMLAH</b></p>
+            </td>
+            <td class="visible_border">
+              <p class="table_heading"><b>SISA</b></p>
+            </td>
+            <td class="visible_border">
+              <p class="table_heading"><b>VERIFIED</b></p>
+            </td>
+            <td class="visible_border">
+              <p class="table_heading"><b>%</b></p>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- <tr valign="top" class="success">
+              <td class="visible_border">
+                <p class="normal no_margin">AMPELGADING</p>
+              </td>
+              <td class="visible_border">
+                <p class="normal no_margin">
+                  <b id="spm_no_spm">-</b>
+                </p>
+              </td>
+              <td class="visible_border">
+                <p class="normal no_margin">NO PLAT</p>
+              </td>
+              <td class="visible_border">
+                <p class="normal no_margin">-</p>
+              </td>
+            </tr> -->
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

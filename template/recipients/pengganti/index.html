@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Banpang - 2024</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Option 1: Include in HTML -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"
+    />
+    <style>
+      /* Option 2: Import via CSS */
+      @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
+      * {
+        box-sizing: border-box;
+      }
+
+      .zoom-move {
+        transition: transform 0.5s;
+        cursor: pointer;
+        overflow: hidden;
+      }
+
+      /* .zoom-move:hover {
+        transform: scale(1.2) translate(10px, 10px);
+      } */
+
+      .dot {
+        width: 15px;
+        height: 15px;
+        display: block;
+        border-radius: 50%;
+      }
+
+      /* .table-responsive {
+        overflow-x: auto;
+      }
+
+      .table-responsive table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      .table-responsive th:first-child,
+      .table-responsive td:first-child {
+        position: sticky;
+        left: 0;
+        background-color: #fff;
+        z-index: 10;
+      } */
+      .non-click {
+        pointer-events: none;
+      }
+
+      *[contenteditable] {
+        text-transform: uppercase;
+      }
+    </style>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6 col-12">
+          <h1 id="title">Data Penerima Bantuan Pangan</h1>
+        </div>
+        <div class="col-sm-6 col-12">
+          <p class="text-start text-sm-end" id="tanggal-diperbarui">
+            Diperbarui: 21 DES 14:27
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <p>
+            Data yang di inputkan bersifat sementara sampai di export,<br />
+            jika di refresh maka akan menarik data ke server!
+          </p>
+        </div>
+        <div class="col">
+          <div class="d-flex justify-content-end">
+            <button class="my-2 btn btn-sm btn-primary" id="export-table">
+              Export
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mt-2 row">
+        <div class="d-flex justify-content-between col-12 col-sm-8 col-md-6">
+          <div>
+            <span class="badge rounded-pill bg-info" id="jumlah-pbp"
+              >JUMLAH</span
+            >
+            <span class="badge rounded-pill bg-dark" id="jumlah-awal"
+              >AWAL</span
+            >
+            <span class="badge rounded-pill bg-success" id="jumlah-pengganti"
+              >PENGGANTI</span
+            >
+            <span class="badge rounded-pill bg-primary" id="jumlah-perwakilan"
+              >PERWAKILAN</span
+            >
+            <span class="badge rounded-pill bg-secondary" id="jumlah-1kk"
+              >1KK</span
+            >
+            <span class="badge rounded-pill bg-danger" id="jumlah-sisa"
+              >SISA</span
+            >
+          </div>
+        </div>
+        <div class="col-12 col-sm-4 col-md-6">
+          <div class="d-inline d-sm-flex justify-content-end">
+            <div class="form-check form-switch mt-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="check-open-foto-all"
+              />
+              <label class="form-check-label" for="check-open-foto-all">
+                Buka foto
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <table
+            class="table table-hover mt-4 table-responsive table-sm"
+            id="table-main"
+          >
+            <thead class="sticky-top">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">NO PBP</th>
+                <th scope="col">NAMA AWAL</th>
+                <th scope="col">NIK AWAL</th>
+                <th scope="col">NAMA PENERIMA</th>
+                <th scope="col">NIK PENERIMA</th>
+                <th scope="col">PEKERJAAN</th>
+                <th scope="col" id="header-status" style="cursor: pointer">
+                  Alasan <i class="bi bi-sort-up"></i>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <script src="//cdn.datatables.net/2.1.5/js/dataTables.min.js"></script>
+    <script>
+      let rotation = 0;
+      function rotateImage(id) {
+        rotation += 90; // Increase rotation by 90 degrees
+        console.log(rotation);
+        $("#" + $(id).attr("id")).css({
+          "-webkit-transform": "rotate(" + rotation + "deg)",
+          "-moz-transform": "rotate(" + rotation + "deg)",
+          transform: "rotate(" + rotation + "deg)",
+        });
+      }
+
+      function showPbp(PBPS) {
+        let filterPbps = null;
+        if (filterType === "pengganti") {
+          filterPbps = PBPS.filter((pbp) => pbp.status_pbp === filterType);
+        } else if (filterType === "perwakilan") {
+          filterPbps = PBPS.filter((pbp) => pbp.status_pbp === filterType);
+          // sort by foto_pbp_created_at dari terlama ke terbaru
+          // filterPbps.sort((a, b) => {
+          //   if (a.foto_pbp_created_at === null) return 1;
+          //   if (b.foto_pbp_created_at === null) return -1;
+          //   return (
+          //     new Date(a.foto_pbp_created_at) - new Date(b.foto_pbp_created_at)
+          //   );
+          // });
+        } else if (filterType === "normal") {
+          filterPbps = PBPS.filter(
+            (pbp) => pbp.nama_pengganti === null && pbp.status_pbp === "normal"
+          );
+        } else if (filterType === "1kk") {
+          filterPbps = PBPS.filter(
+            (pbp) => pbp.nama_pengganti !== null && pbp.status_pbp === "normal"
+          );
+        } else {
+          filterPbps = PBPS;
+        }
+        let jumlahPengganti = PBPS.filter(
+          (pbp) => pbp.status_pbp === "pengganti"
+        ).length;
+        let jumlahPerwakilan = PBPS.filter(
+          (pbp) => pbp.status_pbp === "perwakilan"
+        ).length;
+        let jumlahSisa = PBPS.filter(
+          (pbp) => pbp.status_pbp === "normal" && pbp.foto_ktp === null
+        ).length;
+        let jumlahNormal = PBPS.filter(
+          (pbp) => pbp.status_pbp === "normal" && pbp.nama_pengganti === null
+        ).length;
+        let jumlah1KK = PBPS.filter(
+          (pbp) => pbp.status_pbp === "normal" && pbp.nama_pengganti !== null
+        ).length;
+        if (PBPS.length !== 0) {
+          filterPbps.forEach(
+            (
+              {
+                no_urut_dtt,
+                nama_provinsi,
+                nama_kabkota,
+                nama_kecamatan,
+                nama_kelurahan,
+                no_pbp,
+                nama,
+                nik,
+                RT,
+                RW,
+                nik_pengganti,
+                nama_pengganti,
+                foto_pbp,
+                foto_ktp,
+                PEKERJAAN,
+                status_pbp,
+                notes,
+              },
+              index
+            ) => {
+              provinsiSelected = nama_provinsi;
+              kabkotaSelected = nama_kabkota;
+              kecamatanSelected = nama_kecamatan;
+              desaSelected = nama_kelurahan;
+
+              let TEXT_STATUS = "";
+
+              if (status_pbp === "pengganti") {
+                TEXT_STATUS = `<span class="dot bg-success"></span>&nbsp;${
+                  notes !== null ? notes.toUpperCase() : ""
+                }`;
+              } else if (status_pbp === "perwakilan") {
+                TEXT_STATUS = `<span class="dot bg-primary"></span>&nbsp;${
+                  notes !== null ? notes.toUpperCase() : ""
+                }`;
+              } else if (foto_ktp === null) {
+                TEXT_STATUS = `<span class="dot bg-danger"></span>&nbsp;${
+                  notes !== null ? notes.toUpperCase() : "BELUM"
+                }`;
+              } else if (status_pbp === "normal" && nama_pengganti !== null) {
+                TEXT_STATUS = `<span class="dot bg-secondary"></span>&nbsp;${
+                  notes !== null || notes !== "" ? notes : "1KK"
+                }`;
+              }
+              $("#table-body").append(`
+                        <tr role="button" data-bs-toggle="collapse" data-bs-target="#${nik}" aria-expanded="false" aria-controls="${nik}">
+                            <th scope="row">${no_urut_dtt}</th>
+                            <td>${no_pbp}</td>
+                            <td>${nama}</td>
+                            <td>${nik}&nbsp;</td>
+                            <td class="non-click">${nama_pengganti}</span></td>
+                            <td class="non-click"><span>${nik_pengganti}</span>&nbsp;</td>
+                            <td class="non-click" contenteditable></td>
+                            <td class="align-middle"><div class="d-flex align-items-center">${TEXT_STATUS}</div></td>
+                        </tr>
+                        ${
+                          status_pbp !== "-"
+                            ? `<tr id="${nik}" class="exclude collapse ${
+                                isShow ? "show" : ""
+                              }" style="height:10px">
+                            <!--- <td class="bg-transparent"></td> --->
+                            <td colspan="4">
+                                <img loading="lazy" src="/${nama_kabkota}/${nama_kecamatan}/${nama_kelurahan}/${no_pbp}_PBP.jpg" width="100%" id="I${nik}" class="object-fit-contain"/>
+                            </td>
+                            <td colspan="4">
+                                <img loading="lazy" src="/${nama_kabkota}/${nama_kecamatan}/${nama_kelurahan}/${no_pbp}_KTP.jpg" width="100%" id="K${nik}" class="zoom-move object-fit-contain" onclick="rotateImage('#K${nik}')"/>
+                            </td>
+                        </tr>`
+                            : ""
+                        }
+
+                    `);
+              $("#jumlah-pbp").html("JUMLAH |  " + PBPS.length);
+              $("#jumlah-awal").html("AWAL |  " + jumlahNormal);
+              $("#jumlah-pengganti").html("PENGGANTI |  " + jumlahPengganti);
+              $("#jumlah-perwakilan").html("PERWAKILAN |  " + jumlahPerwakilan);
+              $("#jumlah-1kk").html("1KK |  " + jumlah1KK);
+              $("#jumlah-sisa").html("SISA |  " + jumlahSisa);
+            }
+          );
+        } else {
+          $("#table-body").html("");
+        }
+      }
+
+      $(".zoom-move").hover(
+        function () {
+          $(this).css("transform", "scale(1.2) translate(10px, 10px)");
+        },
+        function () {
+          $(this).css("transform", "");
+        }
+      );
+    </script>
+    <script>
+      function imageZoom(imgID, resultID) {
+        var img, lens, result, cx, cy;
+        img = document.getElementById(imgID);
+        result = document.getElementById(resultID);
+        /* Create lens: */
+        lens = document.createElement("DIV");
+        lens.setAttribute("class", "img-zoom-lens");
+        /* Insert lens: */
+        img.parentElement.insertBefore(lens, img);
+        /* Calculate the ratio between result DIV and lens: */
+        cx = result.offsetWidth / lens.offsetWidth;
+        cy = result.offsetHeight / lens.offsetHeight;
+        /* Set background properties for the result DIV */
+        result.style.backgroundImage = "url('" + img.src + "')";
+        result.style.backgroundSize =
+          img.width * cx + "px " + img.height * cy + "px";
+        /* Execute a function when someone moves the cursor over the image, or the lens: */
+        lens.addEventListener("mousemove", moveLens);
+        img.addEventListener("mousemove", moveLens);
+        /* And also for touch screens: */
+        lens.addEventListener("touchmove", moveLens);
+        img.addEventListener("touchmove", moveLens);
+        function moveLens(e) {
+          var pos, x, y;
+          /* Prevent any other actions that may occur when moving over the image */
+          e.preventDefault();
+          /* Get the cursor's x and y positions: */
+          pos = getCursorPos(e);
+          /* Calculate the position of the lens: */
+          x = pos.x - lens.offsetWidth / 2;
+          y = pos.y - lens.offsetHeight / 2;
+          /* Prevent the lens from being positioned outside the image: */
+          if (x > img.width - lens.offsetWidth) {
+            x = img.width - lens.offsetWidth;
+          }
+          if (x < 0) {
+            x = 0;
+          }
+          if (y > img.height - lens.offsetHeight) {
+            y = img.height - lens.offsetHeight;
+          }
+          if (y < 0) {
+            y = 0;
+          }
+          /* Set the position of the lens: */
+          lens.style.left = x + "px";
+          lens.style.top = y + "px";
+          /* Display what the lens "sees": */
+          result.style.backgroundPosition =
+            "-" + x * cx + "px -" + y * cy + "px";
+        }
+        function getCursorPos(e) {
+          var a,
+            x = 0,
+            y = 0;
+          e = e || window.event;
+          /* Get the x and y positions of the image: */
+          a = img.getBoundingClientRect();
+          /* Calculate the cursor's x and y coordinates, relative to the image: */
+          x = e.pageX - a.left;
+          y = e.pageY - a.top;
+          /* Consider any page scrolling: */
+          x = x - window.pageXOffset;
+          y = y - window.pageYOffset;
+          return { x: x, y: y };
+        }
+      }
+    </script>
+    <script>
+      let DESA = [];
+      let PBP = [];
+      let provinsiSelected = null;
+      let kabkotaSelected = null;
+      let kecamatanSelected = null;
+      let desaSelected = null;
+      let statusSelected = 1;
+      let filterPbp = [];
+      let alokasi = null;
+      let filterType = null;
+      let alokasiSelected = null;
+      let isShow = false;
+
+      fetch("/recipients/:id")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("DATA RECEIVED", data);
+          PBP = data;
+          showPBP(PBP);
+        })
+        .catch((error) => {
+          console.error("Error fetching recipients:", error);
+        });
+
+      $("#header-status").on("click", function () {
+        if (statusSelected >= 5) {
+          statusSelected = 1;
+        } else {
+          statusSelected++;
+        }
+        console.log("STATUS SELECTED", statusSelected);
+        if (statusSelected === 1) {
+          filterType = null;
+        } else if (statusSelected === 2) {
+          filterType = "normal";
+        } else if (statusSelected === 3) {
+          filterType = "1kk";
+        } else if (statusSelected === 4) {
+          filterType = "pengganti";
+        } else if (statusSelected === 5) {
+          filterType = "perwakilan";
+        }
+        showPBP();
+      });
+
+      function showPBP() {
+        showPbp([]);
+        showPbp(PBP);
+      }
+
+      $("#check-open-foto-all").change(function () {
+        isShow = this.checked;
+        showPBP();
+      });
+    </script>
+    <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+    <script>
+      function tableToJson(tableId) {
+        const table = document.getElementById(tableId);
+        const headers = Array.from(table.rows[0].cells).map((cell) =>
+          cell.innerText.trim()
+        );
+        const jsonData = Array.from(table.rows)
+          .slice(1)
+          .map((row) => {
+            const rowObject = {};
+            Array.from(row.cells).forEach((cell, index) => {
+              rowObject[headers[index]] = cell.innerText.trim();
+            });
+            return rowObject;
+          });
+        const jsonDataCleaned = jsonData.filter(
+          (item) => item["NO PBP"] !== ""
+        );
+        return JSON.stringify(jsonDataCleaned, null, 2);
+      }
+
+      function downloadJson() {
+        const jsonText = tableToJson("table-main"); // Replace 'data-table' with your table's ID
+        const filename = `${provinsiSelected}_${kabkotaSelected}_${kecamatanSelected}_${desaSelected}.json`;
+        const element = document.createElement("a");
+        element.setAttribute(
+          "href",
+          "data:application/json;charset=utf-8," + encodeURIComponent(jsonText)
+        );
+        element.setAttribute("download", filename);
+        element.style.display = "none";
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      }
+      $("#export-table").click(() => {
+        console.log("onclick");
+
+        downloadJson();
+        // how to save to json from table
+
+        // $("#table-main").table2excel({
+        //   exclude: ".exclude",
+        //   filename: "data-penerima.xls",
+        //   name: "PENERIMA",
+        //   preserveColors: false,
+        // });
+      });
+    </script>
+  </body>
+</html>

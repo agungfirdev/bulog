@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Banpang 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .root {
+        height: 100vh;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- add react -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- add tailwind 3 -->
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <script type="text/babel">
+      const Button = ({
+        onClick,
+        children,
+        variant = "primary",
+        disabled = false,
+        onFocus = () => {},
+      }) => {
+        // variant can be "primary", "secondary", "danger"
+        const buttonStyles = {
+          primary: "bg-blue-500 text-white hover:bg-blue-600",
+          secondary: "bg-gray-500 text-white hover:bg-gray-600",
+          danger: "bg-red-500 text-white hover:bg-red-600",
+          success: "bg-green-500 text-white hover:bg-green-600",
+        };
+
+        return (
+          <button
+            onClick={onClick}
+            onFocus={onFocus}
+            className={`mx-1 px-4 py-2 rounded-xl ${buttonStyles[variant]} disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+            disabled={disabled}
+          >
+            {children}
+          </button>
+        );
+      };
+
+      const App = () => {
+        return <Recipients />;
+      };
+
+      const Recipients = () => {
+        const [recipients, setRecipients] = React.useState([]);
+        const [recipientSelected, setRecipientSelected] = React.useState(null);
+        const [rotation, setRotation] = React.useState(0);
+
+        React.useEffect(() => {
+          // fetching /recipients
+          fetch("/recipients/:id?type=:type")
+            .then((response) => response.json())
+            .then((data) => {
+              setRecipients(data);
+            })
+            .catch((error) => {
+              console.error("Error fetching recipients:", error);
+            });
+        }, []);
+
+        // show all image with col 4x
+        return (
+          <div className="grid grid-cols-2 gap-4">
+            {recipients.map((recipient) => (
+              <div
+                key={recipient.id}
+                className="grid grid-cols-2 col-span-1 relative"
+              >
+                <img
+                  src={`/${recipient.nama_kabkota}/${recipient.nama_kecamatan}/${recipient.nama_kelurahan}/${recipient.no_pbp}_KTP.jpg`}
+                  alt={recipient.name}
+                  className="w-auto h-auto rounded-lg col-span-1"
+                />
+                <img
+                  src={`/${recipient.nama_kabkota}/${recipient.nama_kecamatan}/${recipient.nama_kelurahan}/${recipient.no_pbp}_PBP.jpg`}
+                  alt={recipient.name}
+                  className="w-auto h-auto rounded-lg col-span-1"
+                />
+                <p className="absolute bottom-0 left-0 bg-white bg-opacity-75 p-1">
+                  {recipient.no_pbp}
+                </p>
+              </div>
+            ))}
+          </div>
+        );
+      };
+      ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
+  </body>
+</html>

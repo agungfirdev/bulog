@@ -1,0 +1,64 @@
+[
+  {
+    "domain": "banpang.bulog.co.id",
+    "expirationDate": 1767665315.696923,
+    "hostOnly": true,
+    "httpOnly": true,
+    "name": "acw_tc",
+    "path": "/",
+    "sameSite": null,
+    "secure": false,
+    "session": false,
+    "storeId": null,
+    "value": "ac11000117676635159512822e004786a21e52ee586f8fd5111af38fad634e"
+  },
+  {
+    "domain": "banpang.bulog.co.id",
+    "hostOnly": true,
+    "httpOnly": true,
+    "name": "aliyungf_tc",
+    "path": "/",
+    "sameSite": null,
+    "secure": false,
+    "session": true,
+    "storeId": null,
+    "value": "16003cb4da5231c9545152d2c961f834496220d388aaa0726a7d8071834f3552"
+  },
+  {
+    "domain": "banpang.bulog.co.id",
+    "hostOnly": true,
+    "httpOnly": true,
+    "name": "__Host-authjs.csrf-token",
+    "path": "/",
+    "sameSite": "lax",
+    "secure": true,
+    "session": true,
+    "storeId": null,
+    "value": "acf4a00a5685b97c552c02cbc48f545e7d000d6a4645c6834bc67ba539bfb30e%7Cda70e4105b5b748d10f93bb3ccbbfe37a5ce2f78ce7081a1fff3fd4f5991523b"
+  },
+  {
+    "domain": "banpang.bulog.co.id",
+    "hostOnly": true,
+    "httpOnly": true,
+    "name": "__Secure-authjs.callback-url",
+    "path": "/",
+    "sameSite": "lax",
+    "secure": true,
+    "session": true,
+    "storeId": null,
+    "value": "https%3A%2F%2Fbanpang.bulog.co.id%2F"
+  },
+  {
+    "domain": "banpang.bulog.co.id",
+    "expirationDate": 1767667130.48973,
+    "hostOnly": true,
+    "httpOnly": true,
+    "name": "__Secure-authjs.session-token",
+    "path": "/",
+    "sameSite": "lax",
+    "secure": true,
+    "session": false,
+    "storeId": null,
+    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoiMTZPYXozeXhTekVhOWJwZVdzdEx6RlFDZUVWYjUxSlpadjQxd3pEdW5BbzN2SnBFaEJnTTdqSTYxSXBQaFNtd09yMUt2Ui0tY09KVkVTcVFmeWpDX1EifQ..khKCYVHo6K7311_JdQFKWA.gO22RbDsvQZ883FvDn_oii-2nJmnaEqCxWQPBurlUMdTBWf15djwlYAANrMjeyByiQiCkFz7jce8k_Zq5sZMg61mho9UlXY4R_1U9sa4e6SPNOGtfUUyWAuHK3Hd148Jzov2JP4GUREIlJIpVe3T9xY_aWdFbBd2FTOIbMSh2Wce1bLbLtTPuxZzM3URLcAusteOa2FzWKlOJz3IClpgDBVy4e5DxoEhlfulhgb05Ln_xLcB1fGsnNuiOCjMv3y0PMyR5AFaaM2odXFMyDHwlQ.pUwmbiVHDRuj3R8F0koKFzSf8Ch1HfjiaFW3CCRyEMg"
+  }
+]

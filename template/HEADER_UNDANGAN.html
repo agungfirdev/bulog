@@ -1,0 +1,97 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style type="text/css">
+      @page {
+        size: A4 potrait;
+        margin: 0.03in;
+      }
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow: visible;
+      }
+      /* Prevent any empty page generation */
+      @media print {
+        .page-break {
+          page-break-before: always;
+        }
+        div {
+          page-break-inside: avoid;
+        }
+      }
+      p {
+        text-align: left;
+        orphans: 2;
+        widows: 2;
+        margin: 1px 0; /* Minimal margins for extreme compactness */
+        padding: 0; /* Remove extra padding on <p> */
+        line-height: 1.2; /* Adjusts the height of the text */
+        direction: ltr;
+        background: transparent;
+        font-language-override: id-ID;
+      }
+      p.heading {
+        font-size: 14pt;
+        text-align: center;
+      }
+      p.normal {
+        font-size: 12pt;
+        text-align: justify;
+      }
+      p.centered {
+        text-align: center;
+      }
+      p.no_margin {
+        margin: 0px 4px;
+      }
+      p.table_heading {
+        font-size: 10pt;
+        text-align: center;
+        font-weight: bold;
+      }
+      p.footnote {
+        font-size: 10pt;
+        text-align: justify;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse; /* Ensures no border space between cells */
+        border-spacing: 0; /* Ensures no space between cells */
+      }
+
+      table .visible_border {
+        border: 1px solid #000000;
+      }
+
+      table .no_border {
+        border: none;
+      }
+      td {
+        padding: 2px 0; /* Reduced padding for more compact cells */
+        margin: 0; /* Ensures no extra margin */
+        vertical-align: top; /* Aligns content to the top */
+      }
+
+      /* Grid layout styles for 4-up invitations */
+      .invitation-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        height: 100%;
+        gap: 10px;
+      }
+
+      .invitation-card {
+        border: 1px dashed #ccc;
+        margin: 4px;
+        padding: 8px;
+        font-size: 0.7em;
+        height: 100%;
+        page-break-inside: avoid;
+      }
+    </style>
+  </head>
+  <body>

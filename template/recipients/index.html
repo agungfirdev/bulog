@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Banpang 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .root {
+        height: 100vh;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- add react -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- add tailwind 3 -->
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <script type="text/babel">
+      const Button = ({
+        onClick,
+        children,
+        variant = "primary",
+        disabled = false,
+        onFocus = () => {},
+      }) => {
+        // variant can be "primary", "secondary", "danger"
+        const buttonStyles = {
+          primary: "bg-blue-500 text-white hover:bg-blue-600",
+          secondary: "bg-gray-500 text-white hover:bg-gray-600",
+          danger: "bg-red-500 text-white hover:bg-red-600",
+          success: "bg-green-500 text-white hover:bg-green-600",
+        };
+
+        return (
+          <button
+            onClick={onClick}
+            onFocus={onFocus}
+            className={`mx-1 px-4 py-2 rounded-xl ${buttonStyles[variant]} disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+            disabled={disabled}
+          >
+            {children}
+          </button>
+        );
+      };
+
+      const App = () => {
+        return <Regions />;
+      };
+
+      const Regions = () => {
+        const [regions, setRegions] = React.useState([]);
+
+        const fetchRegions = async () => {
+          try {
+            const response = await fetch("/wilayah");
+            const data = await response.json();
+            setRegions(data);
+          } catch (error) {
+            console.error("Error fetching regions:", error);
+          }
+        };
+
+        React.useEffect(() => {
+          fetchRegions();
+        }, []);
+
+        return (
+          <div className="flex flex-wrap justify-center">
+            {regions.map((region, index) => (
+              <div
+                key={index}
+                className="flex items-stretch w-full m-2 p-4 border rounded-lg shadow-lg"
+              >
+                {region.nama_kecamatan} - {region.nama_kelurahan}
+                <div className="ml-auto">
+                  <a
+                    className="p-2 text-blue-500 hover:underline"
+                    href={`/recipients/gallery/${region.kode_kelurahan}?type=verified&status=1KK`}
+                  >
+                    1KK
+                  </a>
+                  <a
+                    className="p-2 text-blue-500 hover:underline"
+                    href={`/recipients/gallery/${region.kode_kelurahan}?type=verified&status=pengganti`}
+                  >
+                    Pengganti
+                  </a>
+                  <a
+                    className="p-2 text-blue-500 hover:underline"
+                    href={`/recipients/gallery/${region.kode_kelurahan}?type=verified&status=perwakilan`}
+                  >
+                    Perwakilan
+                  </a>
+                  <a
+                    className="p-2 text-blue-500 hover:underline"
+                    href={`/recipients/gallery/${region.kode_kelurahan}?type=verified`}
+                  >
+                    Verified
+                  </a>
+                  <a
+                    className="p-2 text-blue-500 hover:underline"
+                    href={`/recipients/gallery/${region.kode_kelurahan}?type=unverified`}
+                  >
+                    Unverified
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      };
+      ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
+  </body>
+</html>
