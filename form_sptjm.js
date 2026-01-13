@@ -225,7 +225,7 @@ function generateHeaderSptjm({
         </tr>
         <tr class="visible_border">
           <td class="visible_border">
-            <p class="normal no_margin">ALOKASI BULAN: <b>Juni - Juli</b></p>
+            <p class="normal no_margin">ALOKASI BULAN: <b>Oktober - November</b></p>
           </td>
           <td class="visible_border">
             <p class="normal no_margin">HALAMAN: <b>${indexHalaman}/${jumlahHalaman}</b></p>
@@ -330,6 +330,11 @@ function generateTr({
     pekerjaan_camelcase === "Karyawan Swasta"
       ? "Karyawan"
       : pekerjaan_camelcase;
+
+  pekerjaan_camelcase =
+    pekerjaan_camelcase === "Guru" ? "Karyawan" : pekerjaan_camelcase;
+  pekerjaan_camelcase =
+    pekerjaan_camelcase === "Perangkat Desa" ? "Karyawan" : pekerjaan_camelcase;
 
   return `
         <tr class="visible_border" style="height: 24px">

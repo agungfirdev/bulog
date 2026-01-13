@@ -33,7 +33,7 @@ function upload() {
       nama_kelurahan,
     } = wilayah[index];
     console.log(`Mengupload dokumen untuk ${nama_kecamatan}_${nama_kelurahan}`);
-    const no_bast = `BAST-202507${kode_kelurahan.replaceAll(".", "")}`;
+    const no_bast = `BAST-202511${kode_kelurahan.replaceAll(".", "")}`;
 
     const fileNameUpload = `${nama_provinsi}_${nama_kabkota}_${nama_kecamatan}_${nama_kelurahan}_PERWAKILAN.pdf`;
     const filePathUpload = path.join(
@@ -70,7 +70,7 @@ function upload() {
 
         form.append("filename", `${no_bast}`);
         form.append("document_type", getDocumentTypeUpload("PERWAKILAN"));
-        form.append("alokasi_bulan", "7");
+        form.append("alokasi_bulan", "11");
         form.append("alokasi_tahun", "2025");
         form.append("kode_provinsi", `${kode_provinsi}`);
         form.append("provinsi", `${nama_provinsi}`);

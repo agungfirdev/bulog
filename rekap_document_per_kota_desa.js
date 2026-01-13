@@ -185,28 +185,37 @@ function rekapFotoPBP() {
       </td>`;
     }
 
+    // cari item history_verification_document yang verifikasi_document adalah diterima
+    const history = item.history_verification_document.find(
+      (h) => h.verifikasi_document === "diterima"
+    );
+
+    // buat variable isVerified jika history ada dan history.verifikasi_document === "diterima"
+    const isVerified = history ? true : false;
     tr.innerHTML += `
-      <td class="visible_border">
+    <td class="visible_border">
+      <p class="normal no_margin">${item.nama_kelurahan.toUpperCase()}</p>
+    </td>
+    <td class="visible_border">
         <p class="normal no_margin">${
-          item.file_bast_pbp === null ? "" : "V"
+          isVerified ? "✅" : item.file_sptjm === null ? "" : "V"
         }</p>
-      </td>
-      <td class="visible_border">
-        <p class="normal no_margin">${item.file_sptjm === null ? "" : "V"}</p>
-      </td>
-      <td class="visible_border">
+    </td>
+    <td class="visible_border">
+      <p class="normal no_margin">${
+        isVerified ? "✅" : item.file_bast_pengganti === null ? "" : "V"
+      }</p>
+    </td>
+    <td class="visible_border">
         <p class="normal no_margin">${
-          item.file_bast_pengganti === null ? "" : "V"
+          isVerified ? "✅" : item.file_bast_perwakilan === null ? "" : "V"
         }</p>
-      </td>
-      <td class="visible_border">
-        <p class="normal no_margin">${
-          item.file_bast_perwakilan === null ? "" : "V"
-        }</p>
-      </td>
-      <td class="visible_border">
-        <p class="normal no_margin">${item.nama_kelurahan.toUpperCase()}</p>
-      </td>
+    </td>
+    <td class="visible_border">
+      <p class="normal no_margin">${
+        isVerified ? "✅" : item.file_bast_pbp === null ? "" : "V"
+      }</p>
+    </td>
     `;
     tbody.appendChild(tr);
 
@@ -297,7 +306,8 @@ function rekapFotoPBP() {
         <p class="normal no_margin"><b>${persentaseDiserahkanPerKecamatan}%</b></p>
       </td> -->
     `;
-  tbody.appendChild(tr);
+  // jika tidak dikasih total tinggal beri komentar
+  // tbody.appendChild(tr);
 
   const dateReport = new Date();
   const formattedDate = `${dateReport.getDate()} ${dateReport.toLocaleString(
@@ -307,7 +317,7 @@ function rekapFotoPBP() {
   // save menjadi gambar dengan memanggil screenshotTable
   const outputPath = path.join(
     outPath,
-    `REKAP_PBP_${nama_provinsi}_${nama_kabkota}_${formattedDate.toUpperCase()}.pdf`
+    `REKAP DOKUMEN_${nama_provinsi}_${nama_kabkota}_${formattedDate.toUpperCase()}.pdf`
   );
 
   savePdf(dom.serialize(), outputPath);

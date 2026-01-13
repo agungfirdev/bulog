@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const pathScan = "/Users/agungfir/Documents/SCAN";
-const { kelurahans } = require("./utils");
+const { kelurahans, naturalCompareAZ } = require("./utils");
 let index = 0;
 const today = new Date();
 // format yyyy-mm-dd menit-jam
@@ -29,7 +29,8 @@ const files = fs
   .filter((file) => {
     const stats = fs.statSync(path.join(pathScan, file));
     return stats.size > 0;
-  });
+  })
+  .sort(naturalCompareAZ);
 
 function pindahScanDocument() {
   console.log(`Memproses file ke-${index + 1}/${files.length}`);
@@ -43,24 +44,42 @@ function pindahScanDocument() {
       return pindahScanDocument();
     }
 
-    const kelurahanKode = Number(fileParts[0]);
+    const kelurahanKode = fileParts[0];
     const typeDocument = Number(fileParts[1].split(".")[0]);
 
-    // cek kelurahan kode jika bukan number maka skip
-    if (isNaN(kelurahanKode) || isNaN(typeDocument)) {
-      console.log(`Skipping file ${file} due to invalid naming convention.`);
+    // jikka typeDocument tidak valid, skip
+    if (![1, 2, 3, 4].includes(typeDocument)) {
+      console.log(
+        `Tipe dokumen ${typeDocument} tidak valid. Melewati file ${file}.`
+      );
       index++;
       return pindahScanDocument();
     }
 
     const typeDocString = typeDocumentString(typeDocument);
+    const foundKelurahan = kelurahans.find(
+      (kel) => kel.kode_kelurahan.split(".").slice(2).join("") === kelurahanKode
+    );
 
+    // jika tidak ditemukan, skip
+    if (!foundKelurahan) {
+      console.log(
+        `Kelurahan dengan kode ${kelurahanKode} tidak ditemukan. Melewati file ${file}.`
+      );
+      index++;
+      return pindahScanDocument();
+    }
     const {
       nama_provinsi: provinsi,
       nama_kabkota: kabkota,
       nama_kecamatan: kecamatan,
       nama_kelurahan: kelurahan,
-    } = kelurahans[kelurahanKode - 1];
+    } = foundKelurahan;
+
+    // print info pemindahan
+    // console.log(
+    //   `${provinsi}_${kabkota}_${kecamatan}_${kelurahan}_${typeDocString}`
+    // );
 
     const destDir = path.join(
       pathScan,
@@ -79,10 +98,12 @@ function pindahScanDocument() {
       )
     );
 
-    kelurahans[kelurahanKode - 1][typeDocString] = "X"; // ceklis saja
-    // jadi format dd/mm/yyyy
-
-    kelurahans[kelurahanKode - 1][`UP ${typeDocString}`] = formattedDate;
+    // update REKAP_DESA.json dengan mencentang dokumen yang sudah diupload
+    const findIndex = kelurahans.findIndex(
+      (kel) => kel.kode_kelurahan === foundKelurahan.kode_kelurahan
+    );
+    kelurahans[findIndex][typeDocString] = "X"; // ceklis saja
+    kelurahans[findIndex][`UP ${typeDocString}`] = formattedDate;
 
     // simpan ke REKAP_DESA.json
     fs.writeFileSync(

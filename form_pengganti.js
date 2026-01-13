@@ -192,7 +192,7 @@ function generateHeaderPengganti({
         </tr>
         <tr>
           <td class="no_border">
-            <p class="normal no_margin">Alokasi Bulan: Juni - Juli</p>
+            <p class="normal no_margin">Alokasi Bulan: Oktober - November</p>
           </td>
           <td class="no_border">
               <p class="normal no_margin">Halaman: ${indexHalaman} / ${jumlahHalaman}</p>
@@ -217,7 +217,7 @@ function generateHeaderPengganti({
           <td rowspan="2" class="visible_border">
             <p class="table_heading">No.</p>
           </td>
-          <td rowspan="2" class="visible_border" width="6%">
+          <td rowspan="2" class="visible_border" width="3%">
             <p class="table_heading">No. Urut PBP</p>
           </td>
           <td rowspan="2" class="visible_border">
@@ -240,7 +240,7 @@ function generateHeaderPengganti({
           <td class="visible_border" width="12.5%">
             <p class="table_heading">NIK</p>
           </td>
-          <td class="visible_border" width="10%">
+          <td class="visible_border" width="12%">
             <p class="table_heading">Alamat</p>
           </td>
         </tr>

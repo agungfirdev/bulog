@@ -177,13 +177,13 @@
         } else if (filterType === "perwakilan") {
           filterPbps = PBPS.filter((pbp) => pbp.status_pbp === filterType);
           // sort by foto_pbp_created_at dari terlama ke terbaru
-          // filterPbps.sort((a, b) => {
-          //   if (a.foto_pbp_created_at === null) return 1;
-          //   if (b.foto_pbp_created_at === null) return -1;
-          //   return (
-          //     new Date(a.foto_pbp_created_at) - new Date(b.foto_pbp_created_at)
-          //   );
-          // });
+          filterPbps.sort((a, b) => {
+            if (a.foto_pbp_created_at === null) return 1;
+            if (b.foto_pbp_created_at === null) return -1;
+            return (
+              new Date(a.foto_pbp_created_at) - new Date(b.foto_pbp_created_at)
+            );
+          });
         } else if (filterType === "normal") {
           filterPbps = PBPS.filter(
             (pbp) => pbp.nama_pengganti === null && pbp.status_pbp === "normal"
@@ -275,10 +275,10 @@
                                 isShow ? "show" : ""
                               }" style="height:10px">
                             <!--- <td class="bg-transparent"></td> --->
-                            <td colspan="4">
+                            <!-- <td colspan="4">
                                 <img loading="lazy" src="/${nama_kabkota}/${nama_kecamatan}/${nama_kelurahan}/${no_pbp}_PBP.jpg" width="100%" id="I${nik}" class="object-fit-contain"/>
-                            </td>
-                            <td colspan="4">
+                            </td> -->
+                            <td colspan="2">
                                 <img loading="lazy" src="/${nama_kabkota}/${nama_kecamatan}/${nama_kelurahan}/${no_pbp}_KTP.jpg" width="100%" id="K${nik}" class="zoom-move object-fit-contain" onclick="rotateImage('#K${nik}')"/>
                             </td>
                         </tr>`
@@ -481,6 +481,11 @@
         //   name: "PENERIMA",
         //   preserveColors: false,
         // });
+      });
+
+      // Mengatur agar saat tab ke input (contenteditable), posisi di atas bukan tengah
+      $(document).on("focus", "td[contenteditable]", function () {
+        this.scrollIntoView({ block: "start", behavior: "smooth" });
       });
     </script>
   </body>

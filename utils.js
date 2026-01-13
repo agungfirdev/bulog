@@ -62,24 +62,24 @@ let kelurahans = wilayah
     // nama_kabkota === "KAB. PEKALONGAN"
     // nama_kabkota === "KOTA TEGAL"
     // nama_kabkota === "KOTA PEKALONGAN"
-  )
-  .filter(
-    ({ nama_kecamatan, nama_kelurahan }) =>
-      nama_kecamatan === "Ampelgading" ||
-      // nama_kecamatan === "Bantarbolang" ||
-      // nama_kecamatan === "Belik"
-      nama_kecamatan === "Bodeh" ||
-      nama_kecamatan === "Comal" ||
-      // nama_kecamatan === "Moga" ||
-      // nama_kecamatan === "Pemalang" ||
-      nama_kecamatan === "Petarukan"
-    // nama_kecamatan === "Pulosari" ||
-    // nama_kecamatan === "Randudongkal" &&
-    // nama_kecamatan === "Taman"
-    // nama_kecamatan === "Ulujami" ||
-    // nama_kecamatan === "Warungpring" ||
-    // nama_kecamatan === "Watukumpul"
   );
+// .filter(
+//   ({ nama_kecamatan, nama_kelurahan }) =>
+// nama_kecamatan === "Ampelgading" ||
+// nama_kecamatan === "Bantarbolang" ||
+// nama_kecamatan !== "Belik"
+// nama_kecamatan === "Bodeh" ||
+// nama_kecamatan === "Comal" ||
+// nama_kecamatan === "Moga" ||
+// nama_kecamatan === "Pemalang" ||
+// nama_kecamatan === "Petarukan"
+// nama_kecamatan === "Pulosari" ||
+// nama_kecamatan === "Randudongkal" &&
+// nama_kecamatan === "Taman"
+// nama_kecamatan === "Ulujami" ||
+// nama_kecamatan === "Warungpring"
+// nama_kecamatan === "Watukumpul"
+// );
 
 module.exports = {
   naturalCompareAZ,

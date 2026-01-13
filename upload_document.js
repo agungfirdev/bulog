@@ -57,10 +57,7 @@ function upload() {
       );
       const rekapData = JSON.parse(fs.readFileSync(pathRekap));
 
-      if (
-        rekapData.file_bast_pbp_verification_status === "verified" &&
-        rekapData.file_bast_pbp_catatan === ""
-      ) {
+      if (rekapData.file_bast_pbp_verification_status === "verified") {
         console.log(
           `Dokumen untuk ${nama_kecamatan}_${nama_kelurahan} sudah terverifikasi sebelumnya`
         );

@@ -60,6 +60,7 @@ function downloadFoto() {
     nama_kelurahan
   );
   pbps = JSON.parse(fs.readFileSync(fileName, "utf8"));
+  pbps = pbps.sort((a, b) => a.nama - b.nama);
   // pbps = pbps.filter((p) => p.foto_pbp === null);
   // console.log("↡ Total PBP:", pbps.length);
   // let pbps2 = JSON.parse(fs.readFileSync(fileName2, "utf8"));
@@ -108,7 +109,7 @@ function downloadFotoPBP() {
   const { nama, no_pbp, foto_ktp, foto_pbp, status_pbp, nama_pengganti } =
     pbps[index];
 
-  if (status_pbp !== "perwakilan") {
+  if (status_pbp !== "pengganti") {
     index++;
     setTimeout(downloadFotoPBP, 0);
     return;
