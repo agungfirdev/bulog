@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { naturalCompareAZ } = require("./utils.js");
 
-const kecamatanSelected = "Pulosari";
+const kecamatanSelected = "Watukumpul";
 const spms = require("./data/spm_data.json")
   .filter((spm) => spm.kecamatan === kecamatanSelected)
   // sort provinsi, kabupaten, kecamatan, kelurahan, no_spm A-Z

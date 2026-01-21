@@ -17,7 +17,7 @@ function delay(time) {
   });
 }
 const CookieJSON = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "data", "cookies.json"), "utf8")
+  fs.readFileSync(path.join(__dirname, "data", "cookies.json"), "utf8"),
 ).map((cookie) => ({ ...cookie, sameSite: "" }));
 
 const Cookie = CookieJSON.map((c) => `${c.name}=${c.value}`).join("; ");
@@ -57,7 +57,7 @@ let kelurahans = wilayah
     ({ nama_kabkota }) =>
       //  nama_kabkota === "KAB. BATANG"
       // nama_kabkota === "KAB. BREBES"
-      nama_kabkota === "KAB. PEMALANG"
+      nama_kabkota === "KAB. PEMALANG",
     // nama_kabkota === "KAB. TEGAL"
     // nama_kabkota === "KAB. PEKALONGAN"
     // nama_kabkota === "KOTA TEGAL"
@@ -68,7 +68,7 @@ let kelurahans = wilayah
 // nama_kecamatan === "Ampelgading" ||
 // nama_kecamatan === "Bantarbolang" ||
 // nama_kecamatan !== "Belik"
-// nama_kecamatan === "Bodeh" ||
+// nama_kecamatan === "Bodeh" && nama_kelurahan === "Kebandaran"
 // nama_kecamatan === "Comal" ||
 // nama_kecamatan === "Moga" ||
 // nama_kecamatan === "Pemalang" ||

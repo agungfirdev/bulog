@@ -40,7 +40,9 @@ const spms = require("./data/spm_data.json")
       no_spm,
       createdAt,
       id_qty_pengiriman,
-    }) => kecamatan === "Bantarbolang" && kelurahan === "Bantarbolang"
+    }) =>
+      (kecamatan === "Watukumpul" || kecamatan === "Bantarbolang") &&
+      driver === "11001-RAHARJO",
   );
 
 let index = 0;
@@ -55,14 +57,14 @@ function getOutputPath(spm) {
 
   const outputDriver = path.join(
     pathFolder,
-    `${provinsi}_${kabupaten}_${kecamatan}_${kelurahan}_${no_spm}_${driver}.pdf`
+    `${provinsi}_${kabupaten}_${kecamatan}_${kelurahan}_${no_spm}_${driver}.pdf`,
   );
 
   const outputSorted = path.join(
     pathFolder,
     `${
       index + 1
-    }_${provinsi}_${kabupaten}_${kecamatan}_${kelurahan}_${no_spm}.pdf`
+    }_${provinsi}_${kabupaten}_${kecamatan}_${kelurahan}_${no_spm}.pdf`,
   );
   return is_sorted ? outputSorted : outputDriver;
 }
@@ -75,7 +77,7 @@ async function getSPM() {
     const { kelurahan, no_spm, driver } = spms[index];
 
     console.log(
-      `→ ${index + 1}/${spms.length} ${kelurahan} ${no_spm} ${driver}`
+      `→ ${index + 1}/${spms.length} ${kelurahan} ${no_spm} ${driver}`,
     );
 
     // jika file sudah ada, skip
@@ -109,7 +111,7 @@ async function getSPMPdf(spm) {
 
     await page.goto(
       `https://banpang.bulog.co.id/surat-perintah-muat/${id_qty_pengiriman}`,
-      { waitUntil: "networkidle0", timeout: 60000 * 10 }
+      { waitUntil: "networkidle0", timeout: 60000 * 10 },
     );
 
     const tabPromise = new Promise((resolve, reject) => {
@@ -119,7 +121,7 @@ async function getSPMPdf(spm) {
           newPage.setDefaultTimeout(60000 * 10);
           await newPage.bringToFront();
           content = await newPage.evaluate(
-            () => document.documentElement.outerHTML
+            () => document.documentElement.outerHTML,
           );
 
           // ganti title
@@ -128,7 +130,7 @@ async function getSPMPdf(spm) {
           // replace <title>...</title>
           content = content.replace(
             /<title>[\s\S]*?<\/title>/i,
-            `<title>${title}</title>`
+            `<title>${title}</title>`,
           );
 
           // tambah style untuk selain class SO agar transparent
@@ -155,8 +157,8 @@ async function getSPMPdf(spm) {
           // const match = content.match(/<b>(SO\/[^<]*)</); // SO
           const match = content.match(/<b>(SPM[^<]*)</); // SPM
 
-          const soValue = match ? match[1] : "SO/UNKNOWN";
-          // const spmValue = match ? match[1] : "SO/UNKNOWN";
+          // const soValue = match ? match[1] : "SO/UNKNOWN";
+          const spmValue = match ? match[1] : "SPM/UNKNOWN";
           // Jika ketemu, match[1] berisi "SO/9675/12/2025/11060"
           if (match) {
             console.log(match[1]); // Output: SO/9675/12/2025/11060
@@ -166,74 +168,74 @@ async function getSPMPdf(spm) {
 
           // content = content.replaceAll("", "");
           // ganti sebagai contoh <b>SO/9675/12/2025/11060</b> dengan <b class="SO">SO/...</b>
-          content = content.replaceAll(
-            /<b>SO\/\d{21}<\/b>/g,
-            `<b class="SO">${soValue}</b>`
-          );
+          // content = content.replaceAll(
+          //   /<b>SO\/\d{21}<\/b>/g,
+          //   `<b class="SO">${soValue}</b>`,
+          // );
 
           // ganti menjadi kosong dengan regex SPM20251133.27.06124224970076
           // content = content.replaceAll("11001-RAHARJO", "11001-DWI YOGI S");
           // content = content.replaceAll("087837897911", "0882005318186");
           // content = content.replaceAll("G 9627 JZ", "G 8615 JZ");
-          // content = content.replaceAll(
-          //   `<b>${spmValue}/1-1</b>`,
-          //   `<b class="SO">${spmValue}/1-1</b>`
-          // );
-          // content = content.replaceAll(
-          //   `<b>${spmValue}</b>`,
-          //   `<b class="SO">${spmValue}</b>`
-          // );
+          content = content.replaceAll(
+            `<b>${spmValue}/1-1</b>`,
+            `<b class="SO">${spmValue}/1-1</b>`,
+          );
+          content = content.replaceAll(
+            `<b>${spmValue}</b>`,
+            `<b class="SO">${spmValue}</b>`,
+          );
 
           // content = content.replaceAll("3980", "3080");
           // content = content.replaceAll("846", "532");
 
-          content = content.replaceAll(
-            /(<b)(?![^>]*\bclass\s*=)([^>]*>)(\s*)(SO\/[^<]+)(\s*)(<\/b>)/gi,
-            '$1 class="SO"$2$3$4$5$6'
-          );
+          // content = content.replaceAll(
+          //   /(<b)(?![^>]*\bclass\s*=)([^>]*>)(\s*)(SO\/[^<]+)(\s*)(<\/b>)/gi,
+          //   '$1 class="SO"$2$3$4$5$6'
+          // );
 
           // SPM
           content = content.replaceAll(
             /(<b)(?![^>]*\bclass\s*=)([^>]*>)(\s*)(SPM\/[^<]+)(\s*)(<\/b>)/gi,
-            '$1 class="SO"$2$3$4$5$6'
+            '$1 class="SO"$2$3$4$5$6',
           );
 
           content = content.replace(
             "border: 1px solid rgb(0, 0, 0);",
-            "border: 1px solid transparent;color: transparent;"
+            "border: 1px solid transparent;color: transparent;",
           );
 
           content = content.replaceAll(
             /\/uploads\/transporter\/JPL logo\.png/g,
-            "file:///Users/agungfir/code/bulog/img/JPL%20logo.png"
+            "file:///Users/agungfir/code/bulog/img/JPL%20logo.png",
           );
           content = content.replaceAll(
             /\/images\/logo\/Logo-BULOG_colored\.png/g,
-            "file:///Users/agungfir/code/bulog/img/Logo-BULOG_colored_small.svg"
+            "file:///Users/agungfir/code/bulog/img/Logo-BULOG_colored_small.svg",
           );
           content = content.replaceAll(
             /\/images\/logo\/Logo-Banpang_colored\.png/g,
-            "file:///Users/agungfir/code/bulog/img/Logo-Banpang_colored.png"
+            "file:///Users/agungfir/code/bulog/img/Logo-Banpang_colored.png",
           );
 
           content = content.replaceAll(
             `<p class="normal">KOMPLEKS PERGUDANGAN KEDUNGKELOR</p></td><td class="visible_border text-center"><p class="normal"></p></td><td class="visible_border text-center"><p class="normal">${driver}</p><p class="normal">${no_hp}</p></td>`,
-            `<p style="font-size: 9pt;">${namaAdminGudang}</p><p style="font-size: 9pt;">KOMPLEKS PERGUDANGAN KEDUNGKELOR</p></td><td class="visible_border text-center"><p style="font-size: 9pt;">${namaAdmin}</p></td><td class="visible_border text-center"><p style="font-size: 9pt;">${driver}</p><p style="font-size: 9pt;">${no_hp}</p></td>`
+            `<p style="font-size: 9pt;">${namaAdminGudang}</p><p style="font-size: 9pt;">KOMPLEKS PERGUDANGAN KEDUNGKELOR</p></td><td class="visible_border text-center"><p style="font-size: 9pt;">${namaAdmin}</p></td><td class="visible_border text-center"><p style="font-size: 9pt;">${driver}</p><p style="font-size: 9pt;">${no_hp}</p></td>`,
           );
 
           content = content.replace(
             `<td class="visible_border text-center" width="33%"><p class="normal"><b>ADMIN GUDANG BULOG</b></p></td><td class="visible_border text-center" width="33%"><p class="normal"><b>ADMIN GUDANG TRANSPORTER</b></p></td><td class="visible_border text-center" width="33%"><p class="normal"><b>DRIVER</b></p></td>`,
-            `<td class="visible_border text-center" width="33%"><p style="font-size: 9pt;"><b>ADMIN GUDANG BULOG</b></p></td><td class="visible_border text-center" width="33%"><p style="font-size: 9pt;"><b>ADMIN GUDANG TRANSPORTER</b></p></td><td class="visible_border text-center" width="33%"><p style="font-size: 9pt;"><b>DRIVER</b></p></td>`
+            `<td class="visible_border text-center" width="33%"><p style="font-size: 9pt;"><b>ADMIN GUDANG BULOG</b></p></td><td class="visible_border text-center" width="33%"><p style="font-size: 9pt;"><b>ADMIN GUDANG TRANSPORTER</b></p></td><td class="visible_border text-center" width="33%"><p style="font-size: 9pt;"><b>DRIVER</b></p></td>`,
           );
 
           content = content.replace(
             `<td class="visible_border text-center"><p class="normal">${driver}</p><p class="normal">${no_hp}</p></td><td class="visible_border text-center"><p class="normal">(Nama Jelas &amp; TTD)</p></td><td class="visible_border text-center"><p class="normal">(Nama Jelas &amp; TTD)</p></td>`,
-            `<td class="visible_border text-center"><p style="font-size: 9pt;">${driver}</p><p style="font-size: 9pt;">${no_hp}</p></td><td class="visible_border text-center"><p style="font-size: 9pt;">(Nama Jelas &amp; TTD)</p></td><td class="visible_border text-center"><p style="font-size: 9pt;">(Nama Jelas &amp; TTD)</p></td>`
+            `<td class="visible_border text-center"><p style="font-size: 9pt;">${driver}</p><p style="font-size: 9pt;">${no_hp}</p></td><td class="visible_border text-center"><p style="font-size: 9pt;">(Nama Jelas &amp; TTD)</p></td><td class="visible_border text-center"><p style="font-size: 9pt;">(Nama Jelas &amp; TTD)</p></td>`,
           );
 
           content = content.replace(
             `<p class="normal"><b>DRIVER</b></p></td><td class="visible_border text-center" width="33%"><p class="normal"><b>PETUGAS TRANSPORTER</b></p></td><td class="visible_border text-center" width="33%"><p class="normal"><b>SATGAS BANPANG / PERANGKAT DESA</b></p>`,
-            `<p style="font-size: 9pt;"><b>DRIVER</b></p></td><td class="visible_border text-center" width="33%"><p style="font-size: 9pt;"><b>PETUGAS TRANSPORTER</b></p></td><td class="visible_border text-center" width="33%"><p style="font-size: 9pt;"><b>SATGAS BANPANG / PERANGKAT DESA</b></p>`
+            `<p style="font-size: 9pt;"><b>DRIVER</b></p></td><td class="visible_border text-center" width="33%"><p style="font-size: 9pt;"><b>PETUGAS TRANSPORTER</b></p></td><td class="visible_border text-center" width="33%"><p style="font-size: 9pt;"><b>SATGAS BANPANG / PERANGKAT DESA</b></p>`,
           );
           // content = content.replaceAll("AB 8404 ME", "G 8469 WM");
           content = content.replace(
@@ -249,7 +251,7 @@ async function getSPMPdf(spm) {
               } else {
                 absolutePath = path.resolve(
                   path.dirname("/home/budi/project/test.html"),
-                  filePath
+                  filePath,
                 );
               }
 
@@ -271,7 +273,7 @@ async function getSPMPdf(spm) {
                 console.warn("✗ File not found ", absolutePath);
                 return match; // biarin broken
               }
-            }
+            },
           );
           await browser.close();
           resolve();
@@ -287,7 +289,7 @@ async function getSPMPdf(spm) {
     // hapus script javascript apapun
     content = content.replace(
       /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-      ""
+      "",
     );
     fs.writeFileSync("SPM_debug.html", content);
     await convertToPDF(content, outputPath);

@@ -38,7 +38,7 @@ function rekapFoto() {
 
   const fileName = path.join(
     output,
-    `${kode_alokasi}_${nama_provinsi}_${nama_kabkota}_${nama_kecamatan}_${nama_kelurahan}.json`
+    `${kode_alokasi}_${nama_provinsi}_${nama_kabkota}_${nama_kecamatan}_${nama_kelurahan}.json`,
   );
 
   // jika file tidak ada, skip
@@ -67,19 +67,19 @@ function rekapFoto() {
   const jumlahSudahDiserahkan = sudahDiserahkan.length;
   const jumlahBelumDiserahkan = belumDiserahkan.length;
   const persentaseSudahDiserahkan = Math.floor(
-    (jumlahSudahDiserahkan / jumlahPbp) * 100
+    (jumlahSudahDiserahkan / jumlahPbp) * 100,
   ).toString();
   const jumlahTerverifikasi = pbps.filter(
-    (item) => item.verification_status === "verified"
+    (item) => item.verification_status === "verified",
   ).length;
   const jumlahPengganti = pbps.filter(
-    (pbp) => pbp.status_pbp === "pengganti"
+    (pbp) => pbp.status_pbp === "pengganti",
   ).length;
   const jumlahPerwakilan = pbps.filter(
-    (pbp) => pbp.status_pbp === "perwakilan"
+    (pbp) => pbp.status_pbp === "perwakilan",
   ).length;
   const jumlahPerwakilan1KK = pbps.filter(
-    (pbp) => pbp.status_pbp === "normal" && pbp.nama_pengganti !== null
+    (pbp) => pbp.status_pbp === "normal" && pbp.nama_pengganti !== null,
   ).length;
 
   const { no_bast } = pbps[0];
@@ -138,7 +138,7 @@ function rekapFoto() {
 function rekapFotoPBP() {
   const template = fs.readFileSync(
     path.join(__dirname, "template", "TEMPLATE_REKAP_PBP_KOTA_DESA.html"),
-    "utf8"
+    "utf8",
   );
   const dom = new JSDOM(template);
 
@@ -157,23 +157,20 @@ function rekapFotoPBP() {
     console.log("Semua kota telah diproses.");
     return;
   }
-  dom.window.document.querySelector(
-    "#nama_wilayah"
-  ).textContent = `${nama_provinsi} / ${nama_kabkota}`;
-  dom.window.document.querySelector(
-    "#nama_wilayah"
-  ).innerHTML = `REKAP REALISASI<br>${nama_provinsi} / ${nama_kabkota}`;
+  dom.window.document.querySelector("#nama_wilayah").textContent =
+    `${nama_provinsi} / ${nama_kabkota}`;
+  dom.window.document.querySelector("#nama_wilayah").innerHTML =
+    `REKAP REALISASI<br>${nama_provinsi} / ${nama_kabkota}`;
   // ).innerHTML = `PENERIMAAN BIAYA OPERASIONAL BANPANG<br>OKTOBER - NOVEMBER 2025<br>KEC. ${nama_kecamatan.toUpperCase()}`;
   // tanggal laporan hari ini dengan format 22 Juli 2025 18:00 dalam Indonesia
   const date = new Date();
-  dom.window.document.querySelector(
-    "#tanggal_laporan"
-  ).textContent = `${date.getDate()} ${date.toLocaleString("id-ID", {
-    month: "long",
-  })} ${date.getFullYear()} ${date.getHours()}:${date
-    .getMinutes()
-    .toString()
-    .padStart(2, "0")}`;
+  dom.window.document.querySelector("#tanggal_laporan").textContent =
+    `${date.getDate()} ${date.toLocaleString("id-ID", {
+      month: "long",
+    })} ${date.getFullYear()} ${date.getHours()}:${date
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}`;
 
   // mengisi data rekapPBP ke dalam tabel
   const tbody = dom.window.document.querySelector("tbody:nth-child(2)");
@@ -182,10 +179,10 @@ function rekapFotoPBP() {
     path.join(
       `REKAP_PBP_${nama_provinsi}_${nama_kabkota}_${date.getDate}_${
         date.getMonth() + 1
-      }_${date.getFullYear()}.json`
+      }_${date.getFullYear()}.json`,
     ),
     JSON.stringify(rekapPBP[namaKota], null, 2),
-    "utf8"
+    "utf8",
   );
 
   rekapPBP[namaKota].forEach((item, index) => {
@@ -223,17 +220,17 @@ function rekapFotoPBP() {
       </td> -->
       <!-- <td class="visible_border">
         <p class="normal no_margin">${item.jumlahBelumDiserahkan.toLocaleString(
-          "id-ID"
+          "id-ID",
         )}</p>
       </td> -->
       <td class="visible_border">
         <p class="normal no_margin">${item.jumlahPbp.toLocaleString(
-          "id-ID"
+          "id-ID",
         )}</p>
       </td>
       <td class="visible_border">
         <p class="normal no_margin">${item.jumlahPerwakilan1KK.toLocaleString(
-          "id-ID"
+          "id-ID",
         )}</p>
       </td>
       <!-- <td class="visible_border">
@@ -244,7 +241,7 @@ function rekapFotoPBP() {
       </td> -->
       <td class="visible_border">
         <p class="normal no_margin">${item.jumlahPerwakilan.toLocaleString(
-          "id-ID"
+          "id-ID",
         )}</p>
       </td>
       <!-- <td class="visible_border">
@@ -261,7 +258,7 @@ function rekapFotoPBP() {
       </td> -->
       <td class="visible_border">
         <p class="normal no_margin">${item.jumlahPengganti.toLocaleString(
-          "id-ID"
+          "id-ID",
         )}</p>
       </td>
       <!-- <td class="visible_border">
@@ -291,35 +288,35 @@ function rekapFotoPBP() {
   });
   const totalJumlahPbpPerKota = rekapPBP[namaKota].reduce(
     (acc, item) => acc + item.jumlahPbp,
-    0
+    0,
   );
 
   const totalJumlahPerwakilanPerKota = rekapPBP[namaKota].reduce(
     (acc, item) => acc + item.jumlahPerwakilan,
-    0
+    0,
   );
 
   const totalJumlahPerwakilan1KKPerKota = rekapPBP[namaKota].reduce(
     (acc, item) => acc + item.jumlahPerwakilan1KK,
-    0
+    0,
   );
 
   const totalJumlahPenggantiPerKota = rekapPBP[namaKota].reduce(
     (acc, item) => acc + item.jumlahPengganti,
-    0
+    0,
   );
 
   const totalJumlahSudahDiserahkan = rekapPBP[namaKota].reduce(
     (acc, item) => acc + item.jumlahPbp - item.jumlahBelumDiserahkan,
-    0
+    0,
   );
   const totalJumlahBelumDiserahkanPerKota = rekapPBP[namaKota].reduce(
     (acc, item) => acc + item.jumlahBelumDiserahkan,
-    0
+    0,
   );
   const totalJumlahTerverifikasiPerKota = rekapPBP[namaKota].reduce(
     (acc, item) => acc + item.jumlahTerverifikasi,
-    0
+    0,
   );
   const persentaseDiserahkanPerKecamatan = (
     (totalJumlahSudahDiserahkan / totalJumlahPbpPerKota) *
@@ -334,32 +331,32 @@ function rekapFotoPBP() {
       </td>
       <td class="visible_border">
         <p class="normal no_margin"><b>${totalJumlahPbpPerKota.toLocaleString(
-          "id-ID"
+          "id-ID",
         )}</b></p>
       </td>
       <!-- <td class="visible_border">
         <p class="normal no_margin"><b>${totalJumlahBelumDiserahkanPerKota.toLocaleString(
-          "id-ID"
+          "id-ID",
         )}</b></p>
       </td> -->
       <td class="visible_border">
         <p class="normal no_margin"><b>${totalJumlahPerwakilan1KKPerKota.toLocaleString(
-          "id-ID"
+          "id-ID",
         )}</b></p>
       </td>
       <td class="visible_border">
         <p class="normal no_margin"><b>${totalJumlahPerwakilanPerKota.toLocaleString(
-          "id-ID"
+          "id-ID",
         )}</b></p>
       </td>
       <td class="visible_border">
         <p class="normal no_margin"><b>${totalJumlahPenggantiPerKota.toLocaleString(
-          "id-ID"
+          "id-ID",
         )}</b></p>
       </td>
       <!-- <td class="visible_border">
         <p class="normal no_margin"><b>${totalJumlahTerverifikasiPerKota.toLocaleString(
-          "id-ID"
+          "id-ID",
         )}</b></p>
       </td> -->
       <!-- <td class="visible_border">
@@ -371,12 +368,23 @@ function rekapFotoPBP() {
   const dateReport = new Date();
   const formattedDate = `${dateReport.getDate()} ${dateReport.toLocaleString(
     "id-ID",
-    { month: "long" }
+    { month: "long" },
   )} ${dateReport.getFullYear()}`;
   // save menjadi gambar dengan memanggil screenshotTable
   const outputPath = path.join(
     outPath,
-    `REKAP_PBP_${nama_provinsi}_${nama_kabkota}_${formattedDate.toUpperCase()}.pdf`
+    `REKAP_PBP_${nama_provinsi}_${nama_kabkota}_${formattedDate.toUpperCase()}.pdf`,
+  );
+
+  // save ke json
+  const jsonPath = path.join(
+    outPath,
+    `REKAP_PBP_${nama_provinsi}_${nama_kabkota}_${formattedDate.toUpperCase()}.json`,
+  );
+  fs.writeFileSync(
+    jsonPath,
+    JSON.stringify(rekapPBP[namaKota], null, 2),
+    "utf8",
   );
 
   savePdf(dom.serialize(), outputPath);
